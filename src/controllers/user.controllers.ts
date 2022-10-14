@@ -20,4 +20,16 @@ export default class ProductController {
       next(e as IStatusError);
     }
   };
+  
+  public login = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { body } = req;
+      const { username } = body;
+      const id = await this.userService.login(body as IUser);
+      const token = jwt.sign({ id, username }, secret, { expiresIn: '7d', algorithm: 'HS256' });
+      res.status(200).json({ token });
+    } catch (e) {
+      next(e as IStatusError);
+    }
+  };
 }

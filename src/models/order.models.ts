@@ -17,11 +17,6 @@ export default class OrderModel {
        group by ord.id;`,
     );
     const [rows] = result;
-    const orders = rows as IOrder[];
-    // return orders.map((order) => {
-    //   const { id, userId, productsIds } = order;
-    //   return { id, userId, productsIds: JSON.parse(productsIds as string) };
-    // });
-    return orders;
+    return rows as IOrder[];
   }
 }

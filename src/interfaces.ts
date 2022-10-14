@@ -8,15 +8,15 @@ export interface IProduct {
 export interface IUser {
   id?: number,
   username: string,
-  classe: string,
-  level: number,
+  classe?: string,
+  level?: number,
   password: string,
 }
 
 export interface IOrder {
   id: number,
   userId: number,
-  productsIds: number[] | string,
+  productsIds: number[],
 }
 
 export interface IStatusError extends Error {

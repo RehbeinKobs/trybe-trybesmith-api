@@ -18,6 +18,7 @@ app.post('/products', productController.create);
 const userController = new UserController();
 
 app.post('/users', userController.create);
+app.post('/login', userController.login);
 
 const orderController = new OrderController();
 

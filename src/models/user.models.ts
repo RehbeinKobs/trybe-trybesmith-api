@@ -8,6 +8,18 @@ export default class UserModel {
     this.connection = connection;
   }
 
+  public async login(user: IUser): Promise<number> {
+    const { username, password } = user;
+    const result = await this.connection.execute(
+      'SELECT * FROM Trybesmith.Users WHERE username = ? AND password = ?',
+      [username, password],
+    );
+    const [rows] = result;
+    const users = rows as IUser[];
+    if (users.length > 0) return users[0].id as number;
+    return NaN;
+  }
+
   public async create(user: IUser): Promise<number> {
     const { username, classe, level, password } = user;
     const result = await this.connection.execute<ResultSetHeader>(
