@@ -4,6 +4,7 @@ import ProductController from './controllers/product.controllers';
 import UserController from './controllers/user.controllers';
 import OrderController from './controllers/order.controller';
 import handleError from './middlewares/errorHandler';
+import validateJWT from './middlewares/validateJWT';
 
 const app = express();
 
@@ -23,6 +24,7 @@ app.post('/login', userController.login);
 const orderController = new OrderController();
 
 app.get('/orders', orderController.getAll);
+app.post('/orders', validateJWT, orderController.create);
 
 app.use(handleError);
 

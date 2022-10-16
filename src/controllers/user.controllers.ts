@@ -26,7 +26,8 @@ export default class ProductController {
       const { body } = req;
       const { username } = body;
       const id = await this.userService.login(body as IUser);
-      const token = jwt.sign({ id, username }, secret, { expiresIn: '7d', algorithm: 'HS256' });
+      const data = { id, username };
+      const token = jwt.sign({ data }, secret, { expiresIn: '7d', algorithm: 'HS256' });
       res.status(200).json({ token });
     } catch (e) {
       next(e as IStatusError);

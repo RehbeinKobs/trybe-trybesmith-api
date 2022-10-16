@@ -13,4 +13,14 @@ export default class OrderController {
       next(e as IStatusError);
     }
   };
+
+  public create = async (userId: number, req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { body } = req;
+      const order = await this.orderService.create({ userId, ...body });
+      res.status(201).json(order);
+    } catch (e) {
+      next(e as IStatusError);
+    }
+  };
 }
