@@ -11,10 +11,9 @@ export default class UserService {
     this.model = new UserModel(connection);
   }
 
-  public async getById(id: number): Promise<IUser> {
-    const result = await this.model.getById(id);
-    if (result) return result;
-    throw throwError(404, 'User not found');
+  public async getAll(): Promise<IUser[]> {
+    const result = await this.model.getAll();
+    return result;
   }
 
   public async create(user: IUser): Promise<number> {

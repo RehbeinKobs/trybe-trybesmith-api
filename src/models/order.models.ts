@@ -11,11 +11,8 @@ export default class OrderModel {
   public async getById(id: number): Promise<IOrder[]> {
     const result = await this.connection.execute(
       `select ord.id, userId, json_arrayagg(pro.id) as productsIds
-       from Trybesmith.Orders as ord
-       join Trybesmith.Products as pro
-       on ord.id = pro.orderId
-       where userId = ?
-       group by ord.id;`,
+       from Trybesmith.Orders as ord join Trybesmith.Products as pro
+       on ord.id = pro.orderId where userId = ? group by ord.id;`,
       [id],
     );
     const [rows] = result;
@@ -24,16 +21,23 @@ export default class OrderModel {
 
   public async create(order: IOrder): Promise<IOrder> {
     const { userId, productsIds } = order;
-    productsIds.forEach(async (prodId) => {
-      const [{ insertId }] = await this.connection.execute<ResultSetHeader>(
-        'insert into Trybesmith.Orders (userId) values (?);',
-        [userId],
-      );
-      await this.connection.execute(
+
+    const [{ insertId }] = await this.connection.execute<ResultSetHeader>(
+      'insert into Trybesmith.Orders (userId) values (?);',
+      [userId],
+    );
+
+    const updates: Promise<undefined>[] = [];
+
+    productsIds.forEach(async (prodId) => new Promise(() => {
+      this.connection.execute(
         'update Trybesmith.Products set orderId = ? where id = ?',
         [insertId, prodId],
       );
-    });
+    }));
+
+    await Promise.all(updates);
+
     return order;
   }
 
